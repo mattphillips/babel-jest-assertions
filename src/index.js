@@ -1,43 +1,6 @@
 const looksLike = require('./utils/looks-like');
 
-const inspect = (count, containsExpectAssertions, containsHasAssertions) => ({
-  ExpressionStatement(path) {
-    const isExpect = looksLike(path.node, { expression: { callee: { object: { callee: { name: 'expect' } } } } });
-    const isAsyncExpect = looksLike(path.node, {
-      expression: { argument: { callee: { object: { callee: { name: 'expect' } } } } }
-    });
-    const isExpectAssertions = looksLike(path.node, {
-      expression: { callee: { object: { name: 'expect' }, property: { name: 'assertions' } } }
-    });
-
-    const isHasAssertions = looksLike(path.node, {
-      expression: { callee: { object: { name: 'expect' }, property: { name: 'hasAssertions' } } }
-    });
-
-    if (isExpectAssertions) {
-      containsExpectAssertions();
-    }
-
-    if (isHasAssertions) {
-      containsHasAssertions();
-    }
-
-    if (isExpect || isAsyncExpect) {
-      count();
-    }
-  },
-  ArrowFunctionExpression(path) {
-    const isExpect = looksLike(path.node, { body: { callee: { object: { callee: { name: 'expect' } } } } });
-    const isAsyncExpect = looksLike(path.node, {
-      body: { argument: { callee: { object: { callee: { name: 'expect' } } } } }
-    });
-    if (isExpect || isAsyncExpect) {
-      count();
-    }
-  }
-});
-
-module.exports = function({ template }) {
+module.exports = function({ template, transformFromAst, types }) {
   return {
     name: 'babel-assertions',
     visitor: {
@@ -75,15 +38,11 @@ module.exports = function({ template }) {
           return;
         }
 
-        let count = 0;
-        const countCb = () => count++;
+        const { code } = transformFromAst(types.Program([path.node]));
 
-        let containsExpectAssertions = false;
-        const containsExpectAssertionsCb = () => (containsExpectAssertions = true);
-        let containsHasAssertions = false;
-        const containsHasAssertionsCb = () => (containsHasAssertions = true);
-
-        path.traverse(inspect(countCb, containsExpectAssertionsCb, containsHasAssertionsCb));
+        const count = (code.match(/expect\(/g) || []).length;
+        const containsExpectAssertions = code.includes('expect.assertions(');
+        const containsHasAssertions = code.includes('expect.hasAssertions()');
 
         const args = path.node.expression.arguments[1].body.body;
         if (!containsHasAssertions) {
