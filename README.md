@@ -17,7 +17,7 @@
 
 ## Problem
 
-Ever wondered if you test is actually running the assertions, especially in asynchronous tests? Jest has two features
+Ever wondered if your tests are actually running their assertions, especially in asynchronous tests? Jest has two features
 built in to help with this: [`expect.assertions(number)`](https://facebook.github.io/jest/docs/en/expect.html#expectassertionsnumber)
 and [`expect.hasAssertions()`](https://facebook.github.io/jest/docs/en/expect.html#expecthasassertions). These can be
 useful when doing something like:
@@ -28,8 +28,8 @@ it('resolves to one', () => {
 });
 ```
 
-The issue here is the `catch` case is not dealt with in this test, _which is fine_, but this test will currently pass
-even though the `Promise` rejects and the assertion is never ran.
+The issue here is the `catch` case is not dealt with in this test, _which is fine as we are testing the happy path_,
+but this test will currently pass even though the `Promise` rejects and the assertion is never ran.
 
 ## Solution
 
@@ -112,6 +112,29 @@ it('counts multiple assertions too', () => {
   expect.assertions(2);
   expect(1 + 0).toBe(1);
   expect(0 + 1).toBe(1);
+});
+```
+
+**Asynchronous assertions**
+```js
+it('counts multiple assertions too', async () => {
+  const res = await fetch('www.example.com');
+  expect(res.json).toBeTruthy();
+  const json = await res.json();
+  expect(json).toEqual({ whatever: 'trevor' });
+});
+```
+
+`↓ ↓ ↓ ↓ ↓ ↓`
+
+```js
+it('counts multiple assertions too', async () => {
+  expect.hasAssertions();
+  expect.assertions(2);
+  const res = await fetch('www.example.com');
+  expect(res.json).toBeTruthy();
+  const json = await res.json();
+  expect(json).toEqual({ whatever: 'trevor' });
 });
 ```
 
