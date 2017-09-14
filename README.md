@@ -33,10 +33,10 @@ even though the `Promise` rejects and the assertion is never ran.
 
 ## Solution
 
-One solution is to manually adjust the above test to include `expect.assertions(number)` and `expect.hasAssertions()`.
-However this is quite verbose and prone to human error.
+One solution is to manually adjust the above test to include `expect.assertions(number)` and `expect.hasAssertions()`
+this is quite verbose and prone to human error.
 
-An alternative is a babel plugin to automate adding these additional properties, and this is such plugin 😉.
+An alternative is a babel plugin to automate adding these additional properties, and this is such plugin 😉
 
 ## Installation
 
@@ -78,6 +78,7 @@ require('babel-core').transform('code', {
 
 Simply write your tests as you would normally and this plugin will add the verification of assertions in the background.
 
+**One assertion**
 ```js
 it('resolves to one', () => {
   Promise.reject(1).then(value => expect(value).toBe(1));
@@ -95,6 +96,7 @@ it('resolves to one', () => {
 ```
 _Note_: this test will now fail 🎉
 
+**Multiple assertions**
 ```js
 it('counts multiple assertions too', () => {
   expect(1 + 0).toBe(1);
@@ -117,6 +119,38 @@ it('counts multiple assertions too', () => {
 
 If you add either `expect.assertions(number)` or `expect.hasAssertions()` then your defaults will be favoured and the
 plugin will skip the test.
+
+```js
+it('will leave test as override supplied', () => {
+  expect.hasAssertions();
+  expect.assertions(1);
+
+  if (true) {
+    expect(true).toBe(true);
+  }
+
+  if (false) {
+    expect(false).toBe(false);
+  }
+});
+```
+
+`↓ ↓ ↓ ↓ ↓ ↓`
+
+```js
+it('will leave test as override supplied', () => {
+  expect.hasAssertions();
+  expect.assertions(1);
+
+  if (true) {
+    expect(true).toBe(true);
+  }
+
+  if (false) {
+    expect(false).toBe(false);
+  }
+});
+```
 
 ## Contributors
 
