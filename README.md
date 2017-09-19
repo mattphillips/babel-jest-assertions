@@ -140,7 +140,7 @@ it('counts multiple assertions too', async () => {
 });
 ```
 
-**Commens are ignored**
+**Comments are ignored**
 ```js
 it('ignores commented-out assertions', async () => {
   const res = await fetch('www.example.com');
