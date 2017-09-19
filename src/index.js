@@ -39,10 +39,11 @@ module.exports = function({ template, transformFromAst, types }) {
         }
 
         const { code } = transformFromAst(types.Program([path.node]));
+        const normalisedCode = code.replace(/\/\/(.*)/g, '').replace(/\/\*([\s\S]*)\*\//g, '');
 
-        const count = (code.match(/expect\(/g) || []).length;
-        const containsExpectAssertions = code.includes('expect.assertions(');
-        const containsHasAssertions = code.includes('expect.hasAssertions()');
+        const count = (normalisedCode.match(/expect\(/g) || []).length;
+        const containsExpectAssertions = normalisedCode.includes('expect.assertions(');
+        const containsHasAssertions = normalisedCode.includes('expect.hasAssertions()');
 
         const args = path.node.expression.arguments[1].body.body;
         if (!containsHasAssertions) {
