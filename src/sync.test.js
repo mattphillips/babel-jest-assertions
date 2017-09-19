@@ -65,6 +65,36 @@ pluginTester({
         });
       });
       `
+    },
+    'Adds expect.assertions(1) and ignores commented out expects': {
+      code: `
+      describe('.add', () => {
+        it('returns 2 when given 1 and 1', () => {
+          /*
+            expect(1).toBe(1);
+          */
+          const a = 1; /* expect(a).toBe(1) */
+          const b = 1; // expect(b).toBe(1)
+          expect(add(a, b)).toBe(2);
+          // expect (add(1, 2)).toBe(3);
+        });
+      });
+      `,
+      output: `
+      describe('.add', () => {
+        it('returns 2 when given 1 and 1', () => {
+          expect.hasAssertions();
+          expect.assertions(1);
+          /*
+            expect(1).toBe(1);
+          */
+          const a = 1; /* expect(a).toBe(1) */
+          const b = 1; // expect(b).toBe(1)
+          expect(add(a, b)).toBe(2);
+          // expect (add(1, 2)).toBe(3);
+        });
+      });
+      `
     }
   }
 });
