@@ -140,6 +140,37 @@ it('counts multiple assertions too', async () => {
 });
 ```
 
+**Commens are ignored**
+```js
+it('ignores commented-out assertions', async () => {
+  const res = await fetch('www.example.com');
+  // expect(res.json).toBeTruthy();
+  const json = await res.json();
+  /*
+    expect(json).toEqual({ whatever: 'trevor1' });
+  */
+  expect(json).toEqual({ whatever: 'trevor' });
+  /* expect(json).toEqual({ whatever: 'trevor2' }); */
+});
+```
+
+`↓ ↓ ↓ ↓ ↓ ↓`
+
+```js
+it('counts multiple assertions too', async () => {
+  expect.hasAssertions();
+  expect.assertions(1);
+  const res = await fetch('www.example.com');
+  // expect(res.json).toBeTruthy();
+  const json = await res.json();
+  /*
+    expect(json).toEqual({ whatever: 'trevor1' });
+  */
+  expect(json).toEqual({ whatever: 'trevor' });
+  /* expect(json).toEqual({ whatever: 'trevor2' }); */
+});
+```
+
 ### Override
 
 If you add either `expect.assertions(number)` or `expect.hasAssertions()` then your defaults will be favoured and the
