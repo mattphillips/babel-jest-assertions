@@ -65,6 +65,24 @@ pluginTester({
         });
       });
       `
+    },
+    'Does not count commented out expect statements': {
+      snapshot: true,
+      code: `
+      describe('.add', () => {
+        it('returns 1 when given 0 and 1', () => {
+          // expect(add(1, 2)).toEqual(3);
+          expect(add(0, 1)).toEqual(1);
+          /*
+            expect(add(4, 5).toEqual(9));
+          */
+          expect(add(1, 0)).toEqual(1);
+          /*
+            expect(add(6, 1).toEqual(7));
+            */
+        });
+      });
+      `
     }
   }
 });
