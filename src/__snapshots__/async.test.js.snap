@@ -228,6 +228,10 @@ describe('.add', () => {
         expect(add(4, 5).toEqual(9));
       */
       const value = await Promise.resolve(add(0, 1));
+
+      const a = 1; // expect(a).toEqual(1);
+      const b = 2; /* expect(b).toEqual(2); */
+
       expect(value).toEqual(1);
       // expect(value).toEqual(2);
     } catch (err) {
@@ -251,6 +255,10 @@ describe('.add', () => {
         expect(add(4, 5).toEqual(9));
       */
       const value = await Promise.resolve(add(0, 1));
+
+      const a = 1; // expect(a).toEqual(1);
+      const b = 2; /* expect(b).toEqual(2); */
+
       expect(value).toEqual(1);
       // expect(value).toEqual(2);
     } catch (err) {
