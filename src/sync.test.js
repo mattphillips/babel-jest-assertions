@@ -83,8 +83,9 @@ pluginTester({
       output: `
       describe('.add', () => {
         it('returns 2 when given 1 and 1', () => {
-          expect.hasAssertions();
           expect.assertions(1);
+          expect.hasAssertions();
+
           /*
             expect(1).toBe(1);
           */
