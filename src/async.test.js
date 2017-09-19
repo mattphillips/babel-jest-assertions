@@ -111,6 +111,32 @@ pluginTester({
         });
       });
       `
+    },
+    'Does not count commented out expect statements': {
+      snapshot: true,
+      code: `
+      describe('.add', () => {
+        it('resolves 1', async () => {
+          // expect(add(1, 2)).toEqual(3);
+          try {
+            /*
+              expect(add(4, 5).toEqual(9));
+            */
+            const value = await Promise.resolve(add(0, 1));
+
+            const a = 1; // expect(a).toEqual(1);
+            const b = 2; /* expect(b).toEqual(2); */
+
+            expect(value).toEqual(1);
+            // expect(value).toEqual(2);
+          } catch (err) {
+            /*
+              expect(add(6, 1).toEqual(7));
+              */
+          }
+        });
+      });
+      `
     }
   }
 });

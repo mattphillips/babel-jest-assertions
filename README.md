@@ -140,6 +140,37 @@ it('counts multiple assertions too', async () => {
 });
 ```
 
+**Comments are ignored**
+```js
+it('ignores commented-out assertions', async () => {
+  const res = await fetch('www.example.com');
+  // expect(res.json).toBeTruthy();
+  const json = await res.json();
+  /*
+    expect(json).toEqual({ whatever: 'trevor1' });
+  */
+  expect(json).toEqual({ whatever: 'trevor' });
+  /* expect(json).toEqual({ whatever: 'trevor2' }); */
+});
+```
+
+`↓ ↓ ↓ ↓ ↓ ↓`
+
+```js
+it('counts multiple assertions too', async () => {
+  expect.hasAssertions();
+  expect.assertions(1);
+  const res = await fetch('www.example.com');
+  // expect(res.json).toBeTruthy();
+  const json = await res.json();
+  /*
+    expect(json).toEqual({ whatever: 'trevor1' });
+  */
+  expect(json).toEqual({ whatever: 'trevor' });
+  /* expect(json).toEqual({ whatever: 'trevor2' }); */
+});
+```
+
 ### Override
 
 If you add either `expect.assertions(number)` or `expect.hasAssertions()` then your defaults will be favoured and the
@@ -180,8 +211,8 @@ it('will leave test as override supplied', () => {
 ## Contributors
 
 <!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
-| [<img src="https://avatars0.githubusercontent.com/u/5610087?v=4" width="100px;"/><br /><sub>Matt Phillips</sub>](http://mattphillips.io)<br />[💻](https://github.com/mattphillips/babel-jest-assertions/commits?author=mattphillips "Code") [📖](https://github.com/mattphillips/babel-jest-assertions/commits?author=mattphillips "Documentation") [🚇](#infra-mattphillips "Infrastructure (Hosting, Build-Tools, etc)") [⚠️](https://github.com/mattphillips/babel-jest-assertions/commits?author=mattphillips "Tests") |
-| :---: |
+| [<img src="https://avatars0.githubusercontent.com/u/5610087?v=4" width="100px;"/><br /><sub>Matt Phillips</sub>](http://mattphillips.io)<br />[💻](https://github.com/mattphillips/babel-jest-assertions/commits?author=mattphillips "Code") [📖](https://github.com/mattphillips/babel-jest-assertions/commits?author=mattphillips "Documentation") [🚇](#infra-mattphillips "Infrastructure (Hosting, Build-Tools, etc)") [⚠️](https://github.com/mattphillips/babel-jest-assertions/commits?author=mattphillips "Tests") | [<img src="https://avatars0.githubusercontent.com/u/266594?v=4" width="100px;"/><br /><sub>Ramesh Nair</sub>](https://hiddentao.com/)<br />[💻](https://github.com/mattphillips/babel-jest-assertions/commits?author=hiddentao "Code") [📖](https://github.com/mattphillips/babel-jest-assertions/commits?author=hiddentao "Documentation") [💡](#example-hiddentao "Examples") [⚠️](https://github.com/mattphillips/babel-jest-assertions/commits?author=hiddentao "Tests") |
+| :---: | :---: |
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 
 ## LICENSE
