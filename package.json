@@ -24,9 +24,6 @@
   },
   "keywords": ["babel", "jest", "plugin", "assertions", "expect", "test"],
   "author": "Matt Phillips <matt@mattphillips.io> (mattphillips.io)",
-  "contributors": [
-    "Ramesh Nair <ram@hiddentao.com> (https://hiddentao.com)"
-  ],
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/mattphillips/babel-jest-assertions/issues"
