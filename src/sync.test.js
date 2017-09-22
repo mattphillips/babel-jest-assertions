@@ -80,12 +80,21 @@ pluginTester({
 
           const a = 1; // expect(a).toEqual(1);
           const b = 2; /* expect(b).toEqual(2); */
-          
+
           expect(add(1, 0)).toEqual(1);
           /*
             expect(add(6, 1).toEqual(7));
             */
         });
+      });
+      `
+    },
+    'Handles expression functions': {
+      snapshot: true,
+      code: `
+      describe('.add', () => {
+        it('returns 1 when given 0 and 1', () =>
+          expect(add(1, 0)).toEqual(1));
       });
       `
     }

@@ -1,6 +1,8 @@
+const generate = require('babel-generator').default;
+
 const looksLike = require('./utils/looks-like');
 
-module.exports = function({ template, transformFromAst, types }) {
+module.exports = function({ template, types }) {
   return {
     name: 'babel-assertions',
     visitor: {
@@ -38,7 +40,17 @@ module.exports = function({ template, transformFromAst, types }) {
           return;
         }
 
-        const { code } = transformFromAst(types.Program([path.node]));
+        // get the test case body
+        let body = path.node.expression.arguments[1].body;
+
+        // if it's an expression, e.g: () => (expression)
+        if (types.isCallExpression(body)) {
+          // convert it into a block statement: () => { return (expression); }
+          body = path.node.expression.arguments[1].body = types.blockStatement([types.returnStatement(body)]);
+        }
+
+        // generate the code
+        const { code } = generate(body);
 
         // remove comments
         const normalisedCode = code.replace(/\/\/(.*)/g, '').replace(/\/\*([\s\S]*?)\*\//g, '');
@@ -47,7 +59,8 @@ module.exports = function({ template, transformFromAst, types }) {
         const containsExpectAssertions = normalisedCode.includes('expect.assertions(');
         const containsHasAssertions = normalisedCode.includes('expect.hasAssertions()');
 
-        const args = path.node.expression.arguments[1].body.body;
+        const args = body.body;
+
         if (!containsHasAssertions) {
           const hasAssertions = template('expect.hasAssertions();')();
           args.unshift(hasAssertions);
