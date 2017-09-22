@@ -270,3 +270,22 @@ describe('.add', () => {
 });
 "
 `;
+
+exports[`Handles expression functions 1`] = `
+"
+describe('.add', () => {
+  it('returns 1 when given 0 and 1', async () =>
+    expect(add(1, 0)).toEqual(1));
+});
+
+      ↓ ↓ ↓ ↓ ↓ ↓
+
+describe('.add', () => {
+  it('returns 1 when given 0 and 1', async () => {
+    expect.assertions(1);
+    expect.hasAssertions();
+    return expect(add(1, 0)).toEqual(1);
+  });
+});
+"
+`;

@@ -137,6 +137,15 @@ pluginTester({
         });
       });
       `
+    },
+    'Handles expression functions': {
+      snapshot: true,
+      code: `
+      describe('.add', () => {
+        it('returns 1 when given 0 and 1', async () =>
+          expect(add(1, 0)).toEqual(1));
+      });
+      `
     }
   }
 });

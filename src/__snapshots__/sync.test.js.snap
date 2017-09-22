@@ -130,7 +130,7 @@ describe('.add', () => {
 
     const a = 1; // expect(a).toEqual(1);
     const b = 2; /* expect(b).toEqual(2); */
-    
+
     expect(add(1, 0)).toEqual(1);
     /*
       expect(add(6, 1).toEqual(7));
@@ -159,6 +159,25 @@ describe('.add', () => {
     /*
       expect(add(6, 1).toEqual(7));
       */
+  });
+});
+"
+`;
+
+exports[`Handles expression functions 1`] = `
+"
+describe('.add', () => {
+  it('returns 1 when given 0 and 1', () =>
+    expect(add(1, 0)).toEqual(1));
+});
+
+      ↓ ↓ ↓ ↓ ↓ ↓
+
+describe('.add', () => {
+  it('returns 1 when given 0 and 1', () => {
+    expect.assertions(1);
+    expect.hasAssertions();
+    return expect(add(1, 0)).toEqual(1);
   });
 });
 "
