@@ -1,6 +1,7 @@
 const generate = require('babel-generator').default;
 
 const looksLike = require('./utils/looks-like');
+const { removeComments } = require('./utils');
 
 module.exports = function({ template, types }) {
   return {
@@ -51,9 +52,7 @@ module.exports = function({ template, types }) {
 
         // generate the code
         const { code } = generate(body);
-
-        // remove comments
-        const normalisedCode = code.replace(/\/\/(.*)/g, '').replace(/\/\*([\s\S]*?)\*\//g, '');
+        const normalisedCode = removeComments(code);
 
         const count = (normalisedCode.match(/expect\(/g) || []).length;
         const containsExpectAssertions = normalisedCode.includes('expect.assertions(');
