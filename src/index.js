@@ -41,33 +41,29 @@ module.exports = function({ template, types }) {
           return;
         }
 
-        // get the test case body
-        let body = path.node.expression.arguments[1].body;
+        const test = path.node.expression.arguments[1];
 
-        // if it's an expression, e.g: () => (expression)
-        if (types.isCallExpression(body)) {
-          // convert it into a block statement: () => { return (expression); }
-          body = path.node.expression.arguments[1].body = types.blockStatement([types.returnStatement(body)]);
+        if (types.isCallExpression(test.body)) {
+          test.body = types.blockStatement([types.returnStatement(test.body)]);
         }
 
-        // generate the code
-        const { code } = generate(body);
+        const { code } = generate(test.body);
         const normalisedCode = removeComments(code);
 
         const count = (normalisedCode.match(/expect\(/g) || []).length;
         const containsExpectAssertions = normalisedCode.includes('expect.assertions(');
         const containsHasAssertions = normalisedCode.includes('expect.hasAssertions()');
 
-        const args = body.body;
+        const body = test.body.body;
 
         if (!containsHasAssertions) {
           const hasAssertions = template('expect.hasAssertions();')();
-          args.unshift(hasAssertions);
+          body.unshift(hasAssertions);
         }
 
         if (count > 0 && !containsExpectAssertions) {
           const assertions = template(`expect.assertions(${count})`)();
-          args.unshift(assertions);
+          body.unshift(assertions);
         }
       }
     }
