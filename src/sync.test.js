@@ -9,6 +9,65 @@ pluginTester({
       const add = (a, b) => a + b;
       `
     },
+    'Does not modify code given an inline value for function body': {
+      code: `
+      describe('.add', () => {
+        test('handles variables', noop);
+        test('handles numbers', 1);
+        test('handles booleans', true);
+        test('handles objects', {});
+        test('handles arrays', []);
+        test('handles maps', new Map());
+        test('handles sets', new Set());
+        test('handles symbols', Symbol('x'));
+        test('handles undefined', undefined);
+        test('handles strings', 'hello');
+        test('handles null', null);
+      });
+      `
+    },
+    'Does not modify code given an empty test placeholder': {
+      code: `
+      describe('.add', () => {
+        test('returns 3 when given 2 and 1');
+      });
+      `
+    },
+    'Does not modify code given an empty ftest placeholder': {
+      code: `
+      describe('.add', () => {
+        ftest('returns 3 when given 2 and 1');
+      });
+      `
+    },
+    'Does not modify code given an empty test.only placeholder': {
+      code: `
+      describe('.add', () => {
+        test.only('returns 3 when given 2 and 1');
+      });
+      `
+    },
+    'Does not modify code given an empty it placeholder': {
+      code: `
+      describe('.add', () => {
+        it('returns 3 when given 2 and 1');
+      });
+      `
+    },
+    'Does not modify code given an empty fit placeholder': {
+      code: `
+      describe('.add', () => {
+        fit('returns 3 when given 2 and 1');
+      });
+      `
+    },
+    'Does not modify code given an empty it.only placeholder': {
+      code: `
+      describe('.add', () => {
+        it.only('returns 3 when given 2 and 1');
+      });
+      `
+    },
     'Adds number of assertions and has assertions check when given one expect statement': {
       snapshot: true,
       code: `
