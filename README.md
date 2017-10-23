@@ -15,7 +15,7 @@
 [![MIT License](https://img.shields.io/npm/l/babel-jest-assertions.svg?style=flat-square)](https://github.com/mattphillips/babel-jest-assertions/blob/master/LICENSE)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](http://makeapullrequest.com)
 [![Roadmap](https://img.shields.io/badge/%F0%9F%93%94-roadmap-CD9523.svg?style=flat-square)](https://github.com/mattphillips/babel-jest-assertions/blob/master/docs/ROADMAP.md)
-[![Examples](https://img.shields.io/badge/%F0%9F%92%A1-examples-ff615b.svg?style=flat-square)](https://github.com/mattphillips/babel-jest-assertions/tree/master/examples)
+[![Examples](https://img.shields.io/badge/%F0%9F%92%A1-examples-ff615b.svg?style=flat-square)](https://github.com/mattphillips/babel-jest-assertions/blob/master/docs/EXAMPLES.md)
 
 ## Problem
 
