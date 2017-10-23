@@ -3,6 +3,11 @@ const generate = require('babel-generator').default;
 const looksLike = require('./utils/looks-like');
 const { removeComments } = require('./utils');
 
+const hasBodyFunction = args =>
+  looksLike(args[1], {
+    type: t => t === 'ArrowFunctionExpression' || t === 'FunctionExpression'
+  });
+
 module.exports = function({ template, types }) {
   return {
     name: 'babel-assertions',
@@ -14,7 +19,8 @@ module.exports = function({ template, types }) {
               callee: {
                 type: 'Identifier',
                 name: n => n === 'it' || n === 'test' || n === 'fit' || n === 'ftest'
-              }
+              },
+              arguments: hasBodyFunction
             }
           }
         });
@@ -32,7 +38,8 @@ module.exports = function({ template, types }) {
                   type: 'Identifier',
                   name: 'only'
                 }
-              }
+              },
+              arguments: hasBodyFunction
             }
           }
         });
