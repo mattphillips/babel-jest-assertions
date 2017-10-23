@@ -1,6 +1,6 @@
 {
   "name": "babel-jest-assertions",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Babel plugin that adds the number of assertions found in each test with expect.assertions(n)",
   "main": "dist/index.js",
   "files": [
