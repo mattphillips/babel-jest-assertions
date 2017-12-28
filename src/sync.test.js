@@ -156,6 +156,142 @@ pluginTester({
           expect(add(1, 0)).toEqual(1));
       });
       `
+    },
+    'Counts beforeEach in program node': {
+      snapshot: true,
+      code: `
+      beforeEach(() => {
+        expect(true).toBeTrue();
+      });
+      it('returns 1 when given 0 and 1', () => {
+        expect(add(1, 0)).toEqual(1);
+      });
+      `
+    },
+    'Counts afterEach in program node': {
+      snapshot: true,
+      code: `
+      afterEach(() => {
+        expect(true).toBeTrue();
+      });
+      it('returns 1 when given 0 and 1', () => {
+        expect(add(1, 0)).toEqual(1);
+      });
+      `
+    },
+    'Counts beforeEach in describe block': {
+      snapshot: true,
+      code: `
+      describe('.add', () => {
+        beforeEach(() => {
+          expect(true).toBeTrue();
+        });
+        it('returns 1 when given 0 and 1', () => {
+          expect(add(1, 0)).toEqual(1);
+        });
+      });
+      `
+    },
+    'Counts afterEach in describe block': {
+      snapshot: true,
+      code: `
+      describe('.add', () => {
+        afterEach(() => {
+          expect(true).toBeTrue();
+        });
+        it('returns 1 when given 0 and 1', () => {
+          expect(add(1, 0)).toEqual(1);
+        });
+      });
+      `
+    },
+    'Counts nested afterEach and beforeEach in describe block and program node': {
+      snapshot: true,
+      code: `
+      beforeEach(() => {
+        expect(true).toBeTrue();
+      });
+
+      afterEach(() => {
+        expect(true).toBeTrue();
+      });
+
+      describe('.add', () => {
+        beforeEach(() => {
+          expect(true).toBeTrue();
+        });
+        afterEach(() => {
+          expect(true).toBeTrue();
+        });
+        it('returns 1 when given 0 and 1', () => {
+          expect(add(1, 0)).toEqual(1);
+        });
+      });
+      `
+    },
+    'Does not accumulate sibling blocks with afterEach and beforeEach hooks': {
+      snapshot: true,
+      code: `
+      describe('.add', () => {
+        beforeEach(() => {
+          expect(true).toBeTrue();
+        });
+        afterEach(() => {
+          expect(true).toBeTrue();
+        });
+        it('returns 1 when given 0 and 1', () => {
+          expect(add(1, 0)).toEqual(1);
+        });
+      });
+
+      describe('.add2', () => {
+        beforeEach(() => {
+          expect(true).toBeTrue();
+        });
+        afterEach(() => {
+          expect(true).toBeTrue();
+        });
+        it('returns 1 when given 0 and 1', () => {
+          expect(add2(1, 0)).toEqual(1);
+        });
+      });
+      `
+    },
+    'Counts nested afterEach and beforeEach in describe blocks and program node': {
+      snapshot: true,
+      code: `
+      beforeEach(() => {
+        expect(true).toBeTrue();
+      });
+
+      afterEach(() => {
+        expect(true).toBeTrue();
+      });
+
+      describe('.add', () => {
+        beforeEach(() => {
+          expect(true).toBeTrue();
+        });
+        afterEach(() => {
+          expect(true).toBeTrue();
+        });
+        it('returns 1 when given 0 and 1', () => {
+          expect(add2(1, 0)).toEqual(1);
+        });
+
+        describe('.add', () => {
+          beforeEach(() => {
+            expect(true).toBeTrue();
+          });
+          afterEach(() => {
+            expect(true).toBeTrue();
+          });
+          it('returns 1 when given 0 and 1', () => {
+            expect(add2(1, 0)).toEqual(1);
+          });
+        });
+      });
+      `
     }
   }
 });

@@ -1,5 +1,6 @@
 const { isOnlyBlock, isTestBlock } = require('./identifer');
 const { compose, getExpectCount, getFunctionCode, normaliseFunctionType, removeComments } = require('./utils');
+const getHooksCount = require('./hooks');
 
 module.exports = ({ template }) => {
   return {
@@ -7,6 +8,8 @@ module.exports = ({ template }) => {
     visitor: {
       ExpressionStatement(path) {
         if (!isTestBlock(path) && !isOnlyBlock(path)) return;
+
+        const hookCount = getHooksCount(path, 0);
 
         const testFunction = normaliseFunctionType(path.node.expression.arguments[1]);
         const normalisedCode = compose(removeComments, getFunctionCode)(testFunction);
