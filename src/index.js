@@ -1,52 +1,14 @@
 const generate = require('babel-generator').default;
 
-const looksLike = require('./utils/looks-like');
+const { isOnlyBlock, isTestBlock } = require('./identifer');
 const { removeComments } = require('./utils');
 
-const hasBodyFunction = args =>
-  looksLike(args[1], {
-    type: t => t === 'ArrowFunctionExpression' || t === 'FunctionExpression'
-  });
-
-module.exports = function({ template, types }) {
+module.exports = ({ template, types }) => {
   return {
     name: 'babel-assertions',
     visitor: {
       ExpressionStatement(path) {
-        const isTestBlock = looksLike(path, {
-          node: {
-            expression: {
-              callee: {
-                type: 'Identifier',
-                name: n => n === 'it' || n === 'test' || n === 'fit' || n === 'ftest'
-              },
-              arguments: hasBodyFunction
-            }
-          }
-        });
-
-        const isOnlyBlock = looksLike(path, {
-          node: {
-            expression: {
-              callee: {
-                type: 'MemberExpression',
-                object: {
-                  type: 'Identifier',
-                  name: n => n === 'it' || n === 'test'
-                },
-                property: {
-                  type: 'Identifier',
-                  name: 'only'
-                }
-              },
-              arguments: hasBodyFunction
-            }
-          }
-        });
-
-        if (!isTestBlock && !isOnlyBlock) {
-          return;
-        }
+        if (!isTestBlock(path) && !isOnlyBlock(path)) return;
 
         const test = path.node.expression.arguments[1];
 
