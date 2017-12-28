@@ -1,7 +1,7 @@
 const looksLike = require('./utils/looks-like');
 
-const hasBodyFunction = args =>
-  looksLike(args[1], {
+const hasBodyFunction = index => args =>
+  looksLike(args[index], {
     type: t => t === 'ArrowFunctionExpression' || t === 'FunctionExpression'
   });
 
@@ -13,7 +13,7 @@ const isTestBlock = path =>
           type: 'Identifier',
           name: n => n === 'it' || n === 'test' || n === 'fit' || n === 'ftest'
         },
-        arguments: hasBodyFunction
+        arguments: hasBodyFunction(1)
       }
     }
   });
@@ -33,9 +33,33 @@ const isOnlyBlock = path =>
             name: 'only'
           }
         },
-        arguments: hasBodyFunction
+        arguments: hasBodyFunction(1)
       }
     }
   });
 
-module.exports = { isOnlyBlock, isTestBlock };
+const isDescribeBlock = path =>
+  looksLike(path, {
+    node: {
+      expression: {
+        callee: {
+          type: 'Identifier',
+          name: 'describe'
+        },
+        arguments: hasBodyFunction(1)
+      }
+    }
+  });
+
+const isHookBlock = path =>
+  looksLike(path, {
+    expression: {
+      callee: {
+        type: 'Identifier',
+        name: n => n === 'beforeEach' || n === 'afterEach'
+      },
+      arguments: hasBodyFunction(0)
+    }
+  });
+
+module.exports = { isDescribeBlock, isHookBlock, isOnlyBlock, isTestBlock };
