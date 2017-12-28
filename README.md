@@ -140,6 +140,86 @@ it('counts multiple assertions too', async () => {
 });
 ```
 
+**beforeEach and afterEach blocks**
+
+If you have expectations inside either of `beforeEach` or `afterEach` blocks for your test then these expects will be
+included in the count - even if you have nested describe blocks each with their own `beforeEach`/`afterEach` the count
+will accumulate.
+
+```js
+beforeEach(() => {
+  expect(true).toBe(true);
+});
+
+afterEach(() => {
+  expect(true).toBe(true);
+});
+
+describe('.add', () => {
+  beforeEach(() => {
+    expect(true).toBe(true);
+  });
+  afterEach(() => {
+    expect(true).toBe(true);
+  });
+  it('returns 1 when given 0 and 1', () => {
+    expect(add(1, 0)).toEqual(1);
+  });
+
+  describe('.add2', () => {
+    beforeEach(() => {
+      expect(true).toBe(true);
+    });
+    afterEach(() => {
+      expect(true).toBe(true);
+    });
+    it('returns 1 when given 0 and 1', () => {
+      expect(add2(1, 0)).toEqual(1);
+    });
+  });
+});
+
+      ↓ ↓ ↓ ↓ ↓ ↓
+
+beforeEach(() => {
+  expect(true).toBe(true);
+});
+
+afterEach(() => {
+  expect(true).toBe(true);
+});
+
+describe('.add', () => {
+  beforeEach(() => {
+    expect(true).toBe(true);
+  });
+  afterEach(() => {
+    expect(true).toBe(true);
+  });
+  it('returns 1 when given 0 and 1', () => {
+    expect.assertions(5);
+    expect.hasAssertions();
+
+    expect(add2(1, 0)).toEqual(1);
+  });
+
+  describe('.add2', () => {
+    beforeEach(() => {
+      expect(true).toBe(true);
+    });
+    afterEach(() => {
+      expect(true).toBe(true);
+    });
+    it('returns 1 when given 0 and 1', () => {
+      expect.assertions(7);
+      expect.hasAssertions();
+
+      expect(add2(1, 0)).toEqual(1);
+    });
+  });
+});
+```
+
 **Comments are ignored**
 ```js
 it('ignores commented-out assertions', async () => {
