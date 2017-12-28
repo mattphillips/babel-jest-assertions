@@ -1,3 +1,6 @@
+const generate = require('babel-generator').default;
+const types = require('babel-types');
+
 const EMPTY = '';
 const SINGLE_LINE_COMMENT = /\/\/(.*)/g;
 const MULTI_LINE_COMMENT = /\/\*([\s\S]*?)\*\//g;
@@ -6,7 +9,18 @@ const removeComments = code => code.replace(SINGLE_LINE_COMMENT, EMPTY).replace(
 
 const getExpectCount = code => (code.match(/expect\(/g) || []).length;
 
+const getFunctionCode = fn => generate(fn.body).code;
+
+const normaliseFunctionType = fn => {
+  if (types.isCallExpression(fn.body)) {
+    fn.body = types.blockStatement([types.returnStatement(fn.body)]);
+  }
+  return fn;
+};
+
 module.exports = {
   getExpectCount,
+  getFunctionCode,
+  normaliseFunctionType,
   removeComments
 };

@@ -82,6 +82,7 @@
     "setupTestFrameworkScriptFile": "jest-extended"
   },
   "dependencies": {
-    "babel-generator": "^6.26.0"
+    "babel-generator": "^6.26.0",
+    "babel-types": "^6.26.0"
   }
 }

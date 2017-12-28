@@ -1,22 +1,15 @@
-const generate = require('babel-generator').default;
-
 const { isOnlyBlock, isTestBlock } = require('./identifer');
-const { getExpectCount, removeComments } = require('./utils');
+const { getExpectCount, getFunctionCode, normaliseFunctionType, removeComments } = require('./utils');
 
-module.exports = ({ template, types }) => {
+module.exports = ({ template }) => {
   return {
     name: 'babel-assertions',
     visitor: {
       ExpressionStatement(path) {
         if (!isTestBlock(path) && !isOnlyBlock(path)) return;
 
-        const testFunction = path.node.expression.arguments[1];
-
-        if (types.isCallExpression(testFunction.body)) {
-          testFunction.body = types.blockStatement([types.returnStatement(testFunction.body)]);
-        }
-
-        const { code } = generate(testFunction.body);
+        const testFunction = normaliseFunctionType(path.node.expression.arguments[1]);
+        const code = getFunctionCode(testFunction);
         const normalisedCode = removeComments(code);
         const count = getExpectCount(normalisedCode);
 
