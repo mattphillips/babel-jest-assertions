@@ -10,20 +10,20 @@ module.exports = ({ template, types }) => {
       ExpressionStatement(path) {
         if (!isTestBlock(path) && !isOnlyBlock(path)) return;
 
-        const test = path.node.expression.arguments[1];
+        const testFunction = path.node.expression.arguments[1];
 
-        if (types.isCallExpression(test.body)) {
-          test.body = types.blockStatement([types.returnStatement(test.body)]);
+        if (types.isCallExpression(testFunction.body)) {
+          testFunction.body = types.blockStatement([types.returnStatement(testFunction.body)]);
         }
 
-        const { code } = generate(test.body);
+        const { code } = generate(testFunction.body);
         const normalisedCode = removeComments(code);
 
         const count = (normalisedCode.match(/expect\(/g) || []).length;
         const containsExpectAssertions = normalisedCode.includes('expect.assertions(');
         const containsHasAssertions = normalisedCode.includes('expect.hasAssertions()');
 
-        const body = test.body.body;
+        const body = testFunction.body.body;
 
         if (!containsHasAssertions) {
           const hasAssertions = template('expect.hasAssertions();')();
