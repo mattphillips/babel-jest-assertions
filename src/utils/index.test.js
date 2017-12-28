@@ -1,4 +1,5 @@
-const { removeComments } = require('./');
+const each = require('jest-each');
+const { getExpectCount, removeComments } = require('./');
 
 describe('Utils', () => {
   describe('.removeComments', () => {
@@ -40,6 +41,26 @@ describe('Utils', () => {
         def // qux
         `).replace(/\s/g, '')
       ).toEqual('abcxyzdef');
+    });
+  });
+
+  describe('.getExpectCount', () => {
+    it('returns zero when no string does not contain expect(', () => {
+      expect(getExpectCount('')).toBe(0);
+    });
+
+    each([
+      [1, 'expect('],
+      [1, 'expect(x).toBe(true);'],
+      [
+        2,
+        `
+        expect(x).toBe(true);
+        expect(y).toBe(false);
+      `
+      ]
+    ]).it('returns %s when string contains expect(', (expected, string) => {
+      expect(getExpectCount(string)).toBe(expected);
     });
   });
 });

@@ -1,7 +1,7 @@
 const generate = require('babel-generator').default;
 
 const { isOnlyBlock, isTestBlock } = require('./identifer');
-const { removeComments } = require('./utils');
+const { getExpectCount, removeComments } = require('./utils');
 
 module.exports = ({ template, types }) => {
   return {
@@ -18,8 +18,8 @@ module.exports = ({ template, types }) => {
 
         const { code } = generate(testFunction.body);
         const normalisedCode = removeComments(code);
+        const count = getExpectCount(normalisedCode);
 
-        const count = (normalisedCode.match(/expect\(/g) || []).length;
         const containsExpectAssertions = normalisedCode.includes('expect.assertions(');
         const containsHasAssertions = normalisedCode.includes('expect.hasAssertions()');
 
